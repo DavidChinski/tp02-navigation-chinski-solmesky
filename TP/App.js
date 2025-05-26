@@ -1,10 +1,13 @@
 import * as React from "react";
+import { useState } from "react";
 import {
   TextInput,
   Text,
   View,
   StyleSheet,
   TouchableOpacity,
+  StatusBar,
+  Pressable,
 } from "react-native";
 import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -54,23 +57,52 @@ function ScreenB2() {
 
 function ScreenC1() {
   const navigation = useNavigation();
+  const [usuario, SetearUsuario] = useState("");
+  const [tel, SetearTel] = useState("");
   return (
-    <View style={styles.homeScreen}>
-      <Text style={styles.text}>esta es el PERFIL</Text>
-      <TouchableOpacity onPress={() => navigation.navigate("ScreenC2")}>
-        <Text style={styles.text}>Ir a PERFIL 2</Text>
-      </TouchableOpacity>
+    <View style={styles.container}>
+      <StatusBar style="auto" />
+      <View style={styles.Bar}>
+        <Text style={styles.barText}>Log in</Text>
+      </View>
+      <View style={styles.main}>
+        <TextInput
+          onChangeText={(text) => SetearUsuario(text)}
+          placeholder="Usuario"
+          style={styles.input}
+        />
+        <TextInput
+          onChangeText={(text) => SetearTel(text)}
+          placeholder="Telefono"
+          style={styles.input}
+          keyboardType="numeric" // para teclado numérico
+          maxLength={14} // opcional, ejemplo: máximo 10 dígitos
+        />
+
+        <Pressable
+          onPress={() =>
+            navigation.navigate("ScreenC2", { user: usuario, tel: tel })
+          }
+          color="#FFFFFF"
+          style={styles.boton}
+        >
+          <Text style={styles.botonTexto}>INGRESAR</Text>
+        </Pressable>
+      </View>
     </View>
   );
 }
-function ScreenC2() {
-  const navigation = useNavigation();
+function ScreenC2({ route, navigation }) {
+  const { user, tel } = route.params;
+
   return (
     <View style={styles.homeScreen}>
-      <Text style={styles.text}>PERFIL 2</Text>
+      <Text style={styles.text}>Usuario: {user}</Text>
+      <Text style={styles.text}>Teléfono: {tel}</Text>
     </View>
   );
 }
+
 function ScreenD1() {
   const navigation = useNavigation();
   return (
@@ -183,10 +215,11 @@ export default function App() {
 
 const styles = StyleSheet.create({
   container: {
+    flexDirection: "column",
     flex: 1,
-    justifyContent: "center",
+    backgroundColor: "#fff",
     alignItems: "center",
-    backgroundColor: "black",
+    justifyContent: "center",
   },
   text: {
     color: "black",
@@ -197,7 +230,53 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "gray",
-    
+    backgroundColor: "white",
+  },
+  Bar: {
+    width: "100%",
+    height: 120,
+    backgroundColor: "#0000FF",
+    justifyContent: "center",
+    alignItems: "center",
+    paddingTop: 80,
+  },
+  main: {
+    flex: 5,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "white",
+    width: "100%",
+  },
+  text: {
+    padding: 10,
+  },
+  input: {
+    width: 380,
+    height: 70,
+    borderRadius: 8,
+    borderWidth: 2,
+    margin: 5,
+    borderColor: "#0000FF",
+    color: "black",
+  },
+  barText: {
+    color: "white",
+    fontSize: 20,
+    fontWeight: "black",
+  },
+  boton: {
+    width: 380,
+    height: 70,
+    borderRadius: 8,
+    marginTop: 43,
+    marginBottom: 15,
+    backgroundColor: "#0000FF",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  botonTexto: {
+    color: "#FFFFFF",
+    fontSize: 18,
+    fontWeight: "condensed",
   },
 });
